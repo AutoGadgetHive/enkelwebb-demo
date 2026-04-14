@@ -30,31 +30,6 @@
       cursor: none;
     }
 
-    /* ── CUSTOM CURSOR ── */
-    .cursor {
-      position: fixed;
-      width: 8px; height: 8px;
-      background: var(--ink);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-    }
-    .cursor-ring {
-      position: fixed;
-      width: 36px; height: 36px;
-      border: 1px solid var(--ink);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      transform: translate(-50%, -50%);
-      transition: transform 0.12s ease, width 0.3s, height 0.3s, opacity 0.3s;
-      opacity: 0.4;
-    }
-    body:has(a:hover) .cursor { width: 12px; height: 12px; background: var(--green); }
-    body:has(a:hover) .cursor-ring { width: 52px; height: 52px; opacity: 0.2; border-color: var(--green); }
-
     /* ── NAV ── */
     nav {
       position: fixed;
@@ -832,7 +807,7 @@
     <div class="templates">
 
       <!-- MALL 1 — byt ut href mot din riktiga GitHub-länk -->
-      <a href="YOUR-GITHUB-LINK-TEMPLATE-1" target="_blank" class="template-card reveal reveal-delay-1">
+      <a href="https://autogadgethive.github.io/enkelwebb-demo/mall1.html" target="_blank" class="template-card reveal reveal-delay-1">
         <div class="template-tag">Grundmall</div>
         <div class="template-preview">
           <div class="preview-inner preview-1">
@@ -880,7 +855,7 @@
       </a>
 
       <!-- MALL 2 — byt ut href mot din riktiga GitHub-länk -->
-      <a href="YOUR-GITHUB-LINK-TEMPLATE-2" target="_blank" class="template-card reveal reveal-delay-2">
+      <a href="https://autogadgethive.github.io/enkelwebb-demo/mall2.html" target="_blank" class="template-card reveal reveal-delay-2">
         <div class="template-tag premium">Premiummall</div>
         <div class="template-preview">
           <div class="preview-inner preview-2">
@@ -984,13 +959,13 @@
       <p class="contact-desc">Hör av dig så berättar vi mer. Inget krångel, inga konstigheter — bara en rak konversation om vad du behöver.</p>
     </div>
     <div class="contact-right reveal reveal-delay-2">
-      <a href="tel:+46700000000" class="contact-row">
+      <a href="tel:+46722132687" class="contact-row">
         <span class="contact-row-label">Telefon</span>
-        <span class="contact-row-value">+46 70 000 00 00</span>
+        <span class="contact-row-value">+46 72 213 26 87</span>
       </a>
       <a href="mailto:hej@enkelwebb.se" class="contact-row">
         <span class="contact-row-label">E-post</span>
-        <span class="contact-row-value">hej@enkelwebb.se</span>
+        <span class="contact-row-value">oliverwass0@gmail.com</span>
       </a>
       <a href="https://www.instagram.com" target="_blank" class="contact-row">
         <span class="contact-row-label">Instagram</span>
@@ -1006,21 +981,6 @@
   </footer>
 
   <script>
-    // Custom cursor
-    const cursor = document.getElementById('cursor');
-    const ring = document.getElementById('cursorRing');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    function animCursor() {
-      cursor.style.left = mx + 'px';
-      cursor.style.top = my + 'px';
-      rx += (mx - rx) * 0.12;
-      ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px';
-      ring.style.top = ry + 'px';
-      requestAnimationFrame(animCursor);
-    }
-    animCursor();
 
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
