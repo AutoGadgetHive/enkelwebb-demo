@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enkel Webb — Hemsidor för småföretag</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Epilogue:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #F2EFE9;
+      --white: #FAFAF8;
+      --ink: #141210;
+      --mid: #7A756E;
+      --light: #C4BDB4;
+      --rule: #E0DAD2;
+      --accent: #2A2A2A;
+      --green: #3D5A45;
+      --green-light: #4E7259;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Epilogue', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CUSTOM CURSOR ── */
+    .cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--ink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease, width 0.3s, height 0.3s, opacity 0.3s;
+      opacity: 0.4;
+    }
+    body:has(a:hover) .cursor { width: 12px; height: 12px; background: var(--green); }
+    body:has(a:hover) .cursor-ring { width: 52px; height: 52px; opacity: 0.2; border-color: var(--green); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 56px;
+      mix-blend-mode: multiply;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .nav-contact {
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-contact:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 56px 72px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-number {
+      position: absolute;
+      top: 50%;
+      right: -60px;
+      transform: translateY(-50%) rotate(90deg);
+      font-family: 'Syne', sans-serif;
+      font-size: 18vw;
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--rule);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -0.05em;
+    }
+
+    .hero-top-label {
+      position: absolute;
+      top: 140px;
+      right: 56px;
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--light);
+      writing-mode: vertical-rl;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1.2s;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3.8rem, 9vw, 9rem);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 1s ease forwards 0.4s;
+    }
+
+    .hero-title .outline {
+      -webkit-text-stroke: 2px var(--ink);
+      color: transparent;
+    }
+
+    .hero-title .italic {
+      font-style: italic;
+      font-weight: 400;
+      font-family: 'Epilogue', sans-serif;
+      font-size: 0.65em;
+      color: var(--mid);
+      display: block;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.8s;
+    }
+
+    .hero-desc {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--mid);
+      max-width: 340px;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--ink);
+      padding: 18px 40px;
+      text-decoration: none;
+      transition: background 0.25s, gap 0.25s;
+    }
+    .hero-cta:hover { background: var(--green); gap: 24px; }
+
+    .hero-line {
+      position: absolute;
+      bottom: 0; left: 56px; right: 56px;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      padding: 120px 56px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .how-left {
+      padding-top: 8px;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .how-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 32px;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: start;
+    }
+    .step:first-child { border-top: 1px solid var(--rule); }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--light);
+      padding-top: 4px;
+    }
+
+    .step-content { }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-desc {
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: var(--mid);
+    }
+
+    /* ── WORK / GALLERY ── */
+    .work {
+      padding: 120px 56px;
+    }
+
+    .work-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 72px;
+    }
+
+    .work-header-right {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--mid);
+      max-width: 280px;
+      text-align: right;
+    }
+
+    .templates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+
+    .template-card {
+      position: relative;
+      background: var(--white);
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      group: true;
+    }
+
+    .template-preview {
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      position: relative;
+      background: var(--rule);
+    }
+
+    /* Simulated website screenshot using CSS */
+    .preview-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.6s ease;
+    }
+
+    .template-card:hover .preview-inner { transform: scale(1.03); }
+
+    /* Template 1 preview — dark barber style */
+    .preview-1 {
+      background: #0A0A0A;
+    }
+
+    .preview-1-nav {
+      height: 36px;
+      background: rgba(10,10,10,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid #1A1A1A;
+      flex-shrink: 0;
+    }
+
+    .preview-1-logo { width: 60px; height: 6px; background: #C9A84C; border-radius: 2px; }
+    .preview-1-btn { width: 40px; height: 18px; background: #C9A84C; border-radius: 1px; }
+
+    .preview-1-hero {
+      flex: 1;
+      background: linear-gradient(to right, rgba(10,10,10,0.95) 45%, rgba(10,10,10,0.3)),
+        url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=60') center/cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 16px 20px;
+    }
+
+    .preview-1-tag { width: 80px; height: 4px; background: #C9A84C; border-radius: 2px; margin-bottom: 8px; opacity: 0.7; }
+    .preview-1-h1-a { width: 100px; height: 10px; background: #fff; border-radius: 2px; margin-bottom: 5px; }
+    .preview-1-h1-b { width: 70px; height: 10px; background: #C9A84C; border-radius: 2px; margin-bottom: 10px; }
+    .preview-1-sub { width: 130px; height: 4px; background: #7A7060; border-radius: 2px; margin-bottom: 4px; }
+    .preview-1-sub2 { width: 100px; height: 4px; background: #7A7060; border-radius: 2px; margin-bottom: 14px; }
+    .preview-1-cta { width: 80px; height: 22px; background: #C9A84C; border-radius: 1px; }
+
+    .preview-1-bottom {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    .preview-1-section {
+      flex: 1;
+      height: 60px;
+      background: #111;
+      border-right: 1px solid #1A1A1A;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .preview-bar { height: 3px; background: #2A2A2A; border-radius: 2px; }
+    .preview-bar.gold { background: #C9A84C; width: 30%; }
+    .preview-bar.w60 { width: 60%; }
+    .preview-bar.w80 { width: 80%; }
+    .preview-bar.w40 { width: 40%; }
+
+    /* Template 2 preview — light frisör style */
+    .preview-2 {
+      background: #F7F4EF;
+    }
+
+    .preview-2-nav {
+      height: 36px;
+      background: rgba(247,244,239,0.96);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid #E8E0D5;
+      flex-shrink: 0;
+    }
+
+    .preview-2-logo { width: 70px; height: 5px; background: #1C1917; border-radius: 2px; }
+    .preview-2-links { display: flex; gap: 8px; }
+    .preview-2-link { width: 24px; height: 3px; background: #C8C0B8; border-radius: 2px; }
+    .preview-2-btn { width: 40px; height: 18px; background: #1C1917; border-radius: 1px; }
+
+    .preview-2-hero {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .preview-2-left {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .preview-2-eyebrow { width: 60px; height: 3px; background: #8B6F5E; border-radius: 2px; }
+    .preview-2-h1-a { width: 90px; height: 9px; background: #1C1917; border-radius: 2px; }
+    .preview-2-h1-b { width: 70px; height: 9px; background: #1C1917; border-radius: 2px; }
+    .preview-2-h1-c { width: 50px; height: 9px; background: #8B6F5E; border-radius: 2px; font-style: italic; }
+    .preview-2-sub { width: 110px; height: 3px; background: #C8C0B8; border-radius: 2px; }
+    .preview-2-sub2 { width: 90px; height: 3px; background: #C8C0B8; border-radius: 2px; }
+    .preview-2-cta { width: 70px; height: 20px; background: #1C1917; border-radius: 1px; margin-top: 4px; }
+
+    .preview-2-right {
+      background: url('https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400&q=60') center/cover;
+    }
+
+    .preview-2-bottom {
+      flex-shrink: 0;
+      background: #fff;
+      display: flex;
+      border-top: 1px solid #E8E0D5;
+    }
+
+    .preview-2-section {
+      flex: 1;
+      height: 50px;
+      border-right: 1px solid #E8E0D5;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .preview-bar-light { height: 3px; background: #E8E0D5; border-radius: 2px; }
+    .preview-bar-light.accent { background: #8B6F5E; width: 30%; }
+    .preview-bar-light.w60 { width: 60%; }
+    .preview-bar-light.w80 { width: 80%; }
+    .preview-bar-light.w40 { width: 40%; }
+
+    /* Card info */
+    .template-info {
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+
+    .template-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .template-sub {
+      font-size: 0.75rem;
+      color: var(--mid);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .template-action {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mid);
+      transition: color 0.2s, gap 0.2s;
+    }
+
+    .template-card:hover .template-action { color: var(--green); gap: 16px; }
+
+    .template-tag {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: var(--ink);
+      padding: 6px 14px;
+    }
+
+    .template-tag.premium {
+      background: var(--green);
+    }
+
+    /* ── PRICING ── */
+    .pricing {
+      padding: 120px 56px;
+      background: var(--ink);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+
+    .price-card {
+      background: #1E1C1A;
+      padding: 64px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .price-card.featured {
+      background: var(--green);
+    }
+
+    .price-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .price-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 24px;
+    }
+
+    .price-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .price-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 4px;
+      letter-spacing: -0.03em;
+    }
+
+    .price-note {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 48px;
+      letter-spacing: 0.05em;
+    }
+
+    .price-features {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .price-feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .price-feature-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+
+    .price-card.featured .price-feature-dot {
+      background: rgba(255,255,255,0.6);
+    }
+
+    .price-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--white);
+      padding: 15px 32px;
+      text-decoration: none;
+      transition: background 0.2s, gap 0.2s;
+    }
+    .price-cta:hover { background: var(--bg); gap: 18px; }
+
+    /* ── CONTACT ── */
+    .contact {
+      padding: 120px 56px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+
+    .contact-left { }
+
+    .contact-tagline {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 32px;
+    }
+
+    .contact-tagline em {
+      font-family: 'Epilogue', sans-serif;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--mid);
+    }
+
+    .contact-desc {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--mid);
+      max-width: 380px;
+    }
+
+    .contact-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .contact-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--rule);
+      text-decoration: none;
+      transition: padding-left 0.2s;
+    }
+
+    .contact-row:first-child { border-top: 1px solid var(--rule); }
+    .contact-row:hover { padding-left: 8px; }
+
+    .contact-row-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--light);
+    }
+
+    .contact-row-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+
+    .contact-row:hover .contact-row-value { color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 56px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: var(--light);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      nav { padding: 20px 24px; }
+      .hero { padding: 0 24px 56px; }
+      .hero-number { display: none; }
+      .hero-top-label { display: none; }
+      .hero-bottom { flex-direction: column; align-items: flex-start; gap: 28px; }
+      .how { grid-template-columns: 1fr; padding: 72px 24px; gap: 40px; }
+      .work { padding: 72px 24px; }
+      .work-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .work-header-right { text-align: left; }
+      .templates { grid-template-columns: 1fr; }
+      .pricing { grid-template-columns: 1fr; padding: 72px 24px; }
+      .contact { grid-template-columns: 1fr; padding: 72px 24px; gap: 48px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+      body { cursor: auto; }
+      .cursor, .cursor-ring { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Enkel Webb</a>
+    <a href="#kontakt" class="nav-contact">Kontakta oss</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-number">EW</div>
+    <div class="hero-top-label">Hemsidor · Småföretag · Sverige</div>
+    <div class="hero-content">
+      <p class="hero-tag">Enkel Webb &nbsp;·&nbsp; Hemsidor för småföretag</p>
+      <h1 class="hero-title">
+        Din<br>
+        <span class="outline">hemsida.</span><br>
+        Klar.<br>
+        <span class="italic">Utan krångel.</span>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-desc">Vi bygger snygga, professionella hemsidor för frisörer och andra småföretag. Enkelt, snabbt och utan onödigt trassel.</p>
+        <a href="#mallar" class="hero-cta">
+          Se våra mallar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="hero-line"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="how-left reveal">
+      <p class="section-label">Hur det fungerar</p>
+      <h2 class="section-title">Tre steg.<br>Sedan är<br>du klar.</h2>
+    </div>
+    <div class="how-steps">
+      <div class="step reveal reveal-delay-1">
+        <span class="step-num">01</span>
+        <div class="step-content">
+          <p class="step-title">Du väljer en mall</p>
+          <p class="step-desc">Välj mellan vår grundmall eller premiummall. Du ser hur din sida kan se ut redan innan du bestämmer dig.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <span class="step-num">02</span>
+        <div class="step-content">
+          <p class="step-title">Vi anpassar den</p>
+          <p class="step-desc">Du skickar oss ditt namn, adress, priser och bilder. Vi byter ut all information och gör sidan till din — inom 48 timmar.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <span class="step-num">03</span>
+        <div class="step-content">
+          <p class="step-title">Du får filerna</p>
+          <p class="step-desc">Vi levererar klara filer som du enkelt laddar upp hos ett webbhotell för några kronor i månaden. Engångsbetalning — inga dolda kostnader.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATES / GALLERY -->
+  <section class="work" id="mallar">
+    <div class="work-header reveal">
+      <div>
+        <p class="section-label">Våra mallar</p>
+        <h2 class="section-title">Se exempel<br>på vårt arbete</h2>
+      </div>
+      <p class="work-header-right">Klicka på en mall för att se en live-demo. Allt går att anpassa efter ditt företag.</p>
+    </div>
+    <div class="templates">
+
+      <!-- MALL 1 — byt ut href mot din riktiga GitHub-länk -->
+      <a href="YOUR-GITHUB-LINK-TEMPLATE-1" target="_blank" class="template-card reveal reveal-delay-1">
+        <div class="template-tag">Grundmall</div>
+        <div class="template-preview">
+          <div class="preview-inner preview-1">
+            <div class="preview-1-nav">
+              <div class="preview-1-logo"></div>
+              <div class="preview-1-btn"></div>
+            </div>
+            <div class="preview-1-hero">
+              <div class="preview-1-tag"></div>
+              <div class="preview-1-h1-a"></div>
+              <div class="preview-1-h1-b"></div>
+              <div class="preview-1-sub"></div>
+              <div class="preview-1-sub2"></div>
+              <div class="preview-1-cta"></div>
+            </div>
+            <div class="preview-1-bottom">
+              <div class="preview-1-section">
+                <div class="preview-bar gold"></div>
+                <div class="preview-bar w80"></div>
+                <div class="preview-bar w60"></div>
+              </div>
+              <div class="preview-1-section">
+                <div class="preview-bar gold"></div>
+                <div class="preview-bar w60"></div>
+                <div class="preview-bar w40"></div>
+              </div>
+              <div class="preview-1-section">
+                <div class="preview-bar gold"></div>
+                <div class="preview-bar w80"></div>
+                <div class="preview-bar w60"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="template-info">
+          <div>
+            <p class="template-name">Grundmall</p>
+            <p class="template-sub">Enkel & tydlig · 3 000 kr</p>
+          </div>
+          <span class="template-action">
+            Se demo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <!-- MALL 2 — byt ut href mot din riktiga GitHub-länk -->
+      <a href="YOUR-GITHUB-LINK-TEMPLATE-2" target="_blank" class="template-card reveal reveal-delay-2">
+        <div class="template-tag premium">Premiummall</div>
+        <div class="template-preview">
+          <div class="preview-inner preview-2">
+            <div class="preview-2-nav">
+              <div class="preview-2-logo"></div>
+              <div class="preview-2-links">
+                <div class="preview-2-link"></div>
+                <div class="preview-2-link"></div>
+                <div class="preview-2-link"></div>
+              </div>
+              <div class="preview-2-btn"></div>
+            </div>
+            <div class="preview-2-hero">
+              <div class="preview-2-left">
+                <div class="preview-2-eyebrow"></div>
+                <div class="preview-2-h1-a"></div>
+                <div class="preview-2-h1-b"></div>
+                <div class="preview-2-h1-c"></div>
+                <div class="preview-2-sub"></div>
+                <div class="preview-2-sub2"></div>
+                <div class="preview-2-cta"></div>
+              </div>
+              <div class="preview-2-right"></div>
+            </div>
+            <div class="preview-2-bottom">
+              <div class="preview-2-section">
+                <div class="preview-bar-light accent"></div>
+                <div class="preview-bar-light w80"></div>
+                <div class="preview-bar-light w60"></div>
+              </div>
+              <div class="preview-2-section">
+                <div class="preview-bar-light accent"></div>
+                <div class="preview-bar-light w60"></div>
+                <div class="preview-bar-light w40"></div>
+              </div>
+              <div class="preview-2-section">
+                <div class="preview-bar-light accent"></div>
+                <div class="preview-bar-light w80"></div>
+                <div class="preview-bar-light w60"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="template-info">
+          <div>
+            <p class="template-name">Premiummall</p>
+            <p class="template-sub">Utökad & exklusiv · 5 000 kr</p>
+          </div>
+          <span class="template-action">
+            Se demo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing">
+    <div class="price-card reveal">
+      <p class="price-label">Grundpaket</p>
+      <p class="price-name">Grundmall</p>
+      <p class="price-amount">3 000<span style="font-size:1.5rem;font-weight:400"> kr</span></p>
+      <p class="price-note">Engångsbetalning · Inga löpande kostnader</p>
+      <div class="price-features">
+        <div class="price-feature"><div class="price-feature-dot"></div>En sida med all viktig information</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Bokningsknapp länkad till Bokadirekt</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Adress, öppettider & kontakt</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Mobilanpassad & snabb</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Leverans inom 48 timmar</div>
+      </div>
+      <a href="#kontakt" class="price-cta">
+        Kom igång
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="price-card featured reveal reveal-delay-2">
+      <p class="price-label">Premiumpaket</p>
+      <p class="price-name">Premiummall</p>
+      <p class="price-amount">5 000<span style="font-size:1.5rem;font-weight:400"> kr</span></p>
+      <p class="price-note">Engångsbetalning · Inga löpande kostnader</p>
+      <div class="price-features">
+        <div class="price-feature"><div class="price-feature-dot"></div>Allt i grundpaketet</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Bildgalleri med dina egna foton</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Möt teamet — presentation av personal</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Kundrecensioner</div>
+        <div class="price-feature"><div class="price-feature-dot"></div>Google Maps inbäddad karta</div>
+      </div>
+      <a href="#kontakt" class="price-cta">
+        Kom igång
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="kontakt">
+    <div class="contact-left reveal">
+      <h2 class="contact-tagline">Redo att<br>komma<br><em>igång?</em></h2>
+      <p class="contact-desc">Hör av dig så berättar vi mer. Inget krångel, inga konstigheter — bara en rak konversation om vad du behöver.</p>
+    </div>
+    <div class="contact-right reveal reveal-delay-2">
+      <a href="tel:+46700000000" class="contact-row">
+        <span class="contact-row-label">Telefon</span>
+        <span class="contact-row-value">+46 70 000 00 00</span>
+      </a>
+      <a href="mailto:hej@enkelwebb.se" class="contact-row">
+        <span class="contact-row-label">E-post</span>
+        <span class="contact-row-value">hej@enkelwebb.se</span>
+      </a>
+      <a href="https://www.instagram.com" target="_blank" class="contact-row">
+        <span class="contact-row-label">Instagram</span>
+        <span class="contact-row-value">@enkelwebb</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">Enkel Webb</span>
+    <span class="footer-copy">© 2025 Enkel Webb · Alla rättigheter förbehållna</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
