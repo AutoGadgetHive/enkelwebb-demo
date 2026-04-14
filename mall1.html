@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DEMO — Salongen Strand</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --black: #0A0A0A;
+      --dark: #111111;
+      --dark2: #1A1A1A;
+      --grey: #2A2A2A;
+      --text: #E0D8CC;
+      --text-muted: #7A7060;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── DEMO BANNER ── */
+    .demo-banner {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9999;
+      background: var(--gold);
+      color: var(--black);
+      text-align: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      padding: 7px;
+      text-transform: uppercase;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 29px; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 48px;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .nav-book {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      padding: 10px 24px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-book:hover { background: var(--gold-light); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(10,10,10,0.92) 40%, rgba(10,10,10,0.4) 100%),
+        url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1600&q=80') center/cover no-repeat;
+    }
+
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 48px 80px;
+      max-width: 680px;
+    }
+
+    .hero-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 6.5rem);
+      font-weight: 900;
+      line-height: 0.95;
+      color: #fff;
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.9s ease forwards 0.4s;
+    }
+
+    .hero-title span { color: var(--gold); }
+
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s ease forwards 0.65s;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      padding: 16px 36px;
+      text-decoration: none;
+      transition: background 0.2s, gap 0.2s;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s ease forwards 0.85s;
+    }
+    .hero-cta:hover { background: var(--gold-light); gap: 22px; }
+    .hero-cta svg { flex-shrink: 0; }
+
+    .hero-line {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 500px;
+    }
+
+    .about-img {
+      position: relative;
+      overflow: hidden;
+      background: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&q=80') center/cover no-repeat;
+    }
+
+    .about-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--black));
+    }
+
+    .about-text {
+      background: var(--dark);
+      padding: 80px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+
+    .section-body {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 420px;
+    }
+
+    .gold-rule {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin: 32px 0;
+    }
+
+    /* ── SERVICES ── */
+    .services {
+      background: var(--black);
+      padding: 100px 48px;
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--grey);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .service-item {
+      background: var(--dark);
+      padding: 40px 36px;
+      transition: background 0.2s;
+    }
+    .service-item:hover { background: var(--dark2); }
+
+    .service-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .service-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .service-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+    }
+
+    /* ── BOOKING CTA ── */
+    .booking-section {
+      position: relative;
+      overflow: hidden;
+      background: var(--dark);
+      padding: 100px 48px;
+      text-align: center;
+    }
+
+    .booking-section::before {
+      content: 'BOKA';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Playfair Display', serif;
+      font-size: 22vw;
+      font-weight: 900;
+      color: rgba(201,168,76,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .booking-inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    .booking-inner .section-title {
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      margin-bottom: 16px;
+    }
+
+    .booking-inner .section-body {
+      margin: 0 auto 40px;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      padding: 18px 44px;
+      text-decoration: none;
+      transition: background 0.2s, gap 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold-light); gap: 20px; }
+
+    /* ── INFO ── */
+    .info-section {
+      background: var(--black);
+      padding: 100px 48px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      max-width: 900px;
+      margin: 64px auto 0;
+      border-top: 1px solid var(--grey);
+      padding-top: 64px;
+    }
+
+    .info-block-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .info-block-value {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .info-block-value a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--grey);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .info-block-value a:hover { color: var(--gold); border-color: var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid var(--grey);
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 18px 24px; }
+      .hero-content { padding: 0 24px 64px; }
+      .about { grid-template-columns: 1fr; }
+      .about-img { height: 300px; }
+      .about-img::after { display: none; }
+      .about-text { padding: 48px 24px; }
+      .services { padding: 64px 24px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .booking-section { padding: 64px 24px; }
+      .info-section { padding: 64px 24px; }
+      .info-grid { grid-template-columns: 1fr; gap: 32px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- DEMO-BANNER — ta bort denna rad innan leverans till kund -->
+  <div class="demo-banner">⚠ DEMOSITE — Ej ett riktigt företag — dittnamn.se</div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Salongen Strand</a>
+    <a href="https://www.bokadirekt.se" target="_blank" class="nav-book">Boka nu</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-tag">Est. 2012 &nbsp;·&nbsp; Karlstad</p>
+      <h1 class="hero-title">Känn<br>dig<br><span>Bäst.</span><br>Alltid.</h1>
+      <p class="hero-sub">Professionell hårvård för dig. Boka din tid idag och låt oss ta hand om resten.</p>
+      <a href="https://www.bokadirekt.se" target="_blank" class="hero-cta">
+        Boka din tid
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="hero-line"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <div class="about-img"></div>
+    <div class="about-text reveal">
+      <p class="section-label">Om oss</p>
+      <h2 class="section-title">Passion för<br>ditt hår</h2>
+      <p class="section-body">Vi har tagit hand om Karlstads hår sedan 2012. Hos oss är varje besök en upplevelse — från konsultation till färdig stil. Våra frisörer lyssnar, rådgiver och levererar.</p>
+      <div class="gold-rule"></div>
+      <p class="section-body">Drop-in välkomnas. Tidsbokning rekommenderas.</p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services">
+    <div class="services-header reveal">
+      <p class="section-label">Våra tjänster</p>
+      <h2 class="section-title">Det vi erbjuder</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-item reveal reveal-delay-1">
+        <p class="service-name">Klippning</p>
+        <p class="service-desc">Klippning med sax eller maskin, avslutas med styling.</p>
+        <p class="service-price">350 kr</p>
+      </div>
+      <div class="service-item reveal reveal-delay-2">
+        <p class="service-name">Färgning</p>
+        <p class="service-desc">Färg, slingor eller toning — anpassat efter dig.</p>
+        <p class="service-price">799 kr</p>
+      </div>
+      <div class="service-item reveal reveal-delay-3">
+        <p class="service-name">Klippning & Färg</p>
+        <p class="service-desc">Kombinera klippning och färgning i ett och samma besök.</p>
+        <p class="service-price">1 099 kr</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING CTA -->
+  <section class="booking-section">
+    <div class="booking-inner reveal">
+      <p class="section-label">Redo?</p>
+      <h2 class="section-title">Boka din<br><span style="color:var(--gold)">nästa tid</span></h2>
+      <p class="section-body">Enkel och snabb bokning online. Välj tjänst, välj tid — vi tar hand om resten.</p>
+      <a href="https://www.bokadirekt.se" target="_blank" class="btn-gold">
+        Boka via Bokadirekt
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- INFO -->
+  <section class="info-section">
+    <div style="text-align:center" class="reveal">
+      <p class="section-label">Hitta oss</p>
+      <h2 class="section-title">Besök oss</h2>
+    </div>
+    <div class="info-grid">
+      <div class="reveal reveal-delay-1">
+        <p class="info-block-label">Adress</p>
+        <p class="info-block-value">
+          Storgatan 22<br>
+          652 24 Karlstad<br>
+          Sverige
+        </p>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <p class="info-block-label">Öppettider</p>
+        <p class="info-block-value">
+          Mån – Fre &nbsp; 09:00 – 18:00<br>
+          Lördag &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10:00 – 16:00<br>
+          Söndag &nbsp;&nbsp;&nbsp;&nbsp; Stängt
+        </p>
+      </div>
+      <div class="reveal reveal-delay-3">
+        <p class="info-block-label">Kontakt</p>
+        <p class="info-block-value">
+          <a href="tel:+4654456789">+46 54 456 78 90</a><br>
+          <a href="mailto:hej@salongenstrand.se">hej@salongenstrand.se</a><br>
+          <a href="https://www.instagram.com" target="_blank">@salongenstrand</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-logo">Salongen Strand</span>
+    <span class="footer-copy">© 2025 Salongen Strand. Alla rättigheter förbehållna.</span>
+  </footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
