@@ -440,8 +440,8 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;fon
       <div class="fsec-title">Tillval — Publiceringshjälp</div>
       <p class="fsec-note">Enkel Webb levererar färdiga HTML/CSS-filer i .zip-format. Ni ansvarar själva för domän, webbhotell och uppladdning. Om ni vill ha hjälp med det kan vi erbjuda publiceringshjälp mot en extra avgift.</p>
       <div class="radio-opts">
-        <label class="radio-opt"><input type="radio" name="publicering" value="nej" checked/><div class="rdot"></div><span class="radio-opt-text">Nej tack — vi laddar upp själva</span></label>
-        <label class="radio-opt"><input type="radio" name="publicering" value="ja"/><div class="rdot"></div><span class="radio-opt-text">Ja tack — Publiceringshjälp (+500 kr) &nbsp;<span style="font-size:0.72rem;color:var(--mid)">Enkel Webb hjälper till att ladda upp sidan på ert webbhotell</span></span></label>
+        <label class="radio-opt"><input type="radio" name="publicering" value="nej" checked onchange="updateTotalPrice()"/><div class="rdot"></div><span class="radio-opt-text">Nej tack — vi laddar upp själva</span></label>
+        <label class="radio-opt"><input type="radio" name="publicering" value="ja" onchange="updateTotalPrice()"/><div class="rdot"></div><span class="radio-opt-text">Ja tack — Publiceringshjälp (+500 kr) &nbsp;<span style="font-size:0.72rem;color:var(--mid)">Enkel Webb hjälper till att ladda upp sidan på ert webbhotell</span></span></label>
       </div>
     </div>
 
@@ -936,20 +936,32 @@ document.querySelectorAll('input[name="paket"]').forEach(r => {
     const inc     = isPremium ? 'En sida + galleri + team + omdömen + karta' : 'En sida med all info + bokningsknapp';
     const changes = isPremium ? '2 ändringsrundor ingår' : '1 ändringsrunda ingår';
 
-    document.getElementById('sp-pkg').textContent      = pkg;
-    document.getElementById('sp-price').textContent    = price;
-    document.getElementById('legal-pkg').textContent   = pkg;
-    document.getElementById('legal-price').textContent = price;
-    document.getElementById('legal-inc').textContent   = inc;
+    document.getElementById('sp-pkg').textContent        = pkg;
+    document.getElementById('legal-pkg').textContent     = pkg;
+    document.getElementById('legal-inc').textContent     = inc;
     document.getElementById('legal-changes').textContent = changes;
-    document.getElementById('cb-pkg').textContent      = pkg + 'et';
-    document.getElementById('cb-price').textContent    = price;
+    document.getElementById('cb-pkg').textContent        = pkg + 'et';
+    updateTotalPrice();
   });
 });
 
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
+// ══════════════════════════════════════════
+// TOTAL PRICE (paket + publicering)
+// ══════════════════════════════════════════
+function updateTotalPrice() {
+  const isPremium = document.querySelector('input[name="paket"]:checked')?.value.includes('5 000');
+  const isPub     = document.querySelector('input[name="publicering"]:checked')?.value === 'ja';
+  const base      = isPremium ? 5000 : 3000;
+  const total     = base + (isPub ? 500 : 0);
+  const formatted = total.toLocaleString('sv-SE') + ' kr';
+  document.getElementById('sp-price').textContent    = formatted;
+  document.getElementById('legal-price').textContent = formatted;
+  document.getElementById('cb-price').textContent    = formatted;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('hidden-datum').value = new Date().toLocaleDateString('sv-SE');
 
