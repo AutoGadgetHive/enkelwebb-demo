@@ -456,6 +456,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;fon
         <div class="order-row"><span>Leveranstid</span><strong>Förhandsvisning inom 48h · Filer efter betalning</strong></div>
         <div class="order-row"><span>Betalningsvillkor</span><strong>Faktura 14 dagar</strong></div>
         <div class="order-row"><span>Överlämning</span><strong>.zip-filer levereras efter full betalning</strong></div>
+        <div class="order-row" id="pub-row" style="display:none"><span>Publiceringshjälp</span><strong>+500 kr — uppladdning på kundens webbhotell</strong></div>
         <div class="order-total"><span>Totalt</span><span id="legal-price">3 000 kr</span></div>
       </div>
       <div class="legal-text">
@@ -961,6 +962,8 @@ function updateTotalPrice() {
   document.getElementById('sp-price').textContent    = formatted;
   document.getElementById('legal-price').textContent = formatted;
   document.getElementById('cb-price').textContent    = formatted;
+  const pubRow = document.getElementById('pub-row');
+  if (pubRow) pubRow.style.display = isPub ? 'flex' : 'none';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
