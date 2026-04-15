@@ -485,7 +485,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Epilogue',sans-serif;fon
       <input type="hidden" name="datum" id="hidden-datum"/>
       <input type="hidden" name="villkorsversion" value="v1.0 — 2026-04-15"/>
       <input type="hidden" name="_subject" value="Ny beställning — Enkel Webb"/>
-      <button type="submit" class="btn-submit">Skicka beställning <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      <button type="submit" class="btn-submit" onclick="return validateForm()">Skicka beställning <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
       <p style="font-size:0.7rem;color:var(--mid);margin-top:10px;text-align:center">Er beställning skickas till Enkel Webb. Ni får en bekräftelse via e-post inom 24 timmar.</p>
     </div>
 
@@ -965,8 +965,53 @@ function updateTotalPrice() {
   if (pubRow) pubRow.style.display = isPub ? 'flex' : 'none';
 }
 
+// ══════════════════════════════════════════
+// FORM VALIDATION
+// ══════════════════════════════════════════
+function validateForm() {
+  const required = [
+    { id: 'f-namn',           msg: 'Fyll i företagsnamn.' },
+    { id: 'f-beskrivning',    msg: 'Fyll i en kort beskrivning av verksamheten.' },
+    { id: 'godkannare_namn',  msg: 'Fyll i ditt namn.' },
+    { id: 'godkannare_foretag', msg: 'Fyll i företagets namn.' },
+  ];
+
+  for (const f of required) {
+    const el = document.getElementById(f.id) || document.querySelector(`[name="${f.id}"]`);
+    if (el && !el.value.trim()) {
+      el.style.borderColor = '#C0392B';
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.focus();
+      alert(f.msg);
+      return false;
+    }
+  }
+
+  const checkboxes = [
+    { id: 'cb1', msg: 'Du måste godkänna villkoren för att fortsätta.' },
+    { id: 'cb2', msg: 'Du måste bekräfta beställningen för att fortsätta.' },
+    { id: 'cb3', msg: 'Du måste godkänna GDPR-texten för att fortsätta.' },
+  ];
+
+  for (const cb of checkboxes) {
+    const el = document.getElementById(cb.id);
+    if (el && !el.checked) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      alert(cb.msg);
+      return false;
+    }
+  }
+
+  return true;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('hidden-datum').value = new Date().toLocaleDateString('sv-SE');
+
+  document.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener('input', () => { el.style.borderColor = ''; });
+    el.addEventListener('focus', () => { el.style.borderColor = ''; });
+  });
 
   buildHours();
   addService();
